@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
+import SignupForm from "./components/SignupForm";
+import DealView from "./components/DealView";
+import "./App.css";
+import { isLoggedIn } from "./components/utils";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Link,
+  Redirect,
+} from "react-router-dom";
+import axios from "axios";
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  return (
+    // Show the component only when the user is logged in
+    // Otherwise, redirect the user to /signin page
+    <Route
+      {...rest}
+      render={(props) =>
+        isLoggedIn() ? <Component {...props} /> : <Redirect to="/login" />
+      }
+    />
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    // setting the routes
+
+    <Router>
+      <Switch>
+        <Route exact path="/" component={LoginForm} />
+        <Route exact path="/login" component={LoginForm} />
+        <Route exact path="/signup" component={SignupForm} />
+        <Route exact path="/deals" component={Dashboard} />
+        <Route exact path="/deals/:dealId" component={DealView} />
+      </Switch>
+    </Router>
   );
 }
 
